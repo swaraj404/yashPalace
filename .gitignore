@@ -7,3 +7,10 @@ dist-ssr
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Owner dashboard data and secrets
+data/
+.env
+.dev.vars*
+.wrangler/
+*-backup.sql

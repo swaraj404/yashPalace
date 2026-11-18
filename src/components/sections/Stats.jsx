@@ -33,7 +33,7 @@ function Counter({ value, suffix }) {
   }, [value]);
 
   return (
-    <span ref={ref} className="font-serif text-[clamp(2.4rem,5vw,3.6rem)] leading-none text-gold-glow">
+    <span ref={ref} className="tabular font-serif text-[clamp(3rem,6vw,5rem)] font-medium leading-none text-green-800">
       {display.toLocaleString('en-IN')}
       {suffix}
     </span>
@@ -42,17 +42,17 @@ function Counter({ value, suffix }) {
 
 export default function Stats() {
   return (
-    <section className="bg-green-800 px-6 py-14 text-ivory sm:px-10 md:py-20 lg:px-24">
-      <div className="mx-auto grid max-w-container grid-cols-2 gap-x-4 gap-y-10 text-center md:grid-cols-4">
-        {stats.map((stat) => (
+    <section aria-label="Yash Palace at a glance" className="container-x">
+      <div className="grid grid-cols-2 border-y border-cream md:grid-cols-4">
+        {stats.map((stat, i) => (
           <div
             key={stat.label}
-            className="relative px-2 md:after:absolute md:after:right-0 md:after:top-1/2 md:after:h-14 md:after:w-px md:after:-translate-y-1/2 md:after:bg-white/10 md:last:after:hidden"
+            className={`px-2 py-9 md:px-6 md:py-12 ${i > 0 ? 'md:border-l md:border-cream' : ''} ${
+              i % 2 ? 'border-l border-cream pl-5' : ''
+            } ${i > 1 ? 'border-t border-cream md:border-t-0' : ''}`}
           >
             <Counter value={stat.value} suffix={stat.suffix} />
-            <div className="mt-2 text-[0.78rem] uppercase tracking-[0.14em] opacity-80">
-              {stat.label}
-            </div>
+            <div className="mt-2 text-sm text-ink-soft">{stat.label}</div>
           </div>
         ))}
       </div>

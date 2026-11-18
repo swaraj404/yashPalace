@@ -1,0 +1,39 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "yash-palace",
+	"main": "worker/index.js",
+	"compatibility_date": "2026-11-01",
+	"workers_dev": true,
+	"preview_urls": false,
+	"observability": {
+		"enabled": true
+	},
+	"vars": {
+		"ADMIN_HOST": "admin.yashpalace.com"
+	},
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"html_handling": "none",
+		"not_found_handling": "none",
+		// Everything else (photos, scripts, styles) is served free without running the Worker.
+		"run_worker_first": [
+			"/api/*",
+			"/",
+			"/admin",
+			"/admin/",
+			"/admin.html",
+			"/index.html",
+			"/404.html",
+			"/assets/venue-tour.mp4"
+		]
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "yash-palace",
+			"database_id": "09c198c1-de7c-4a72-a73c-5e3eae4de4bd",
+			"migrations_dir": "migrations"
+		}
+	]
+}

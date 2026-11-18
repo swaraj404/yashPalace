@@ -1,11 +1,11 @@
 export default function Eyebrow({ children, light = false, center = false, className = '' }) {
   return (
     <p
-      className={`inline-flex items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.28em] ${
-        light ? 'text-gold-glow' : 'text-gold'
+      className={`flex items-center gap-3 font-serif text-xl font-medium italic ${
+        light ? 'text-gold-glow [text-shadow:0_1px_14px_rgba(23,31,15,0.75)]' : 'text-gold'
       } ${center ? 'justify-center' : ''} ${className}`}
     >
-      <span className="inline-block h-px w-8 bg-current opacity-70" />
+      <span className="inline-block h-px w-8 bg-current opacity-60" />
       {children}
     </p>
   );

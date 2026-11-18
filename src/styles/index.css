@@ -12,9 +12,25 @@
   }
 
   body {
-    @apply bg-ivory font-sans font-light text-ink antialiased;
-    line-height: 1.6;
+    @apply bg-ivory font-sans text-ink antialiased;
+    line-height: 1.65;
+    font-variant-numeric: lining-nums;
     overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.gold.bright');
+    outline-offset: 3px;
   }
 
   ::selection {
@@ -36,15 +52,22 @@
 
 @layer components {
   .container-x {
-    @apply mx-auto max-w-container px-6 sm:px-10 lg:px-24;
+    @apply mx-auto max-w-container px-5 sm:px-10 lg:px-14;
   }
 
   .section-pad {
-    @apply py-20 md:py-28 lg:py-32;
+    @apply pb-24 pt-20 md:pb-32 md:pt-28 lg:pb-40 lg:pt-32;
   }
 }
 
 @layer utilities {
+  .arch {
+    border-radius: 999px 999px 6px 6px;
+  }
+  .tabular {
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

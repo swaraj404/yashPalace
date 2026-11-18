@@ -1,109 +1,92 @@
 # Yash Palace — Wedding & Celebration Venue (React + Vite + Tailwind)
 
-A fully responsive, component-driven marketing site for **Yash Palace, Yeola (Maharashtra)**.
-The hero/story section features a **scroll-scrubbed venue video** (GSAP ScrollTrigger): as you
-scroll, the drone footage plays forward and the palace grows toward you — inspired by the motion
-feel of sites like pkgroupcompanies.com, but using Yash Palace's own colours (olive-lime green,
-marigold gold, ivory & white).
+Website and owner dashboard for **Yash Palace, Yeola (Maharashtra)**.
+The hero features a **scroll-scrubbed venue video** (GSAP ScrollTrigger): as you scroll, the drone
+footage plays forward and the palace grows toward you.
 
-## Tech stack
+## What is included
 
-| Concern | Tool |
-|---------|------|
-| Framework / build | **React 18** + **Vite** |
-| Styling | **Tailwind CSS** (design tokens in `tailwind.config.js`) |
-| Scroll animation | **GSAP** + **ScrollTrigger** (`@gsap/react` `useGSAP`) |
-| Smooth scrolling | **Lenis** |
-| Icons | **lucide-react** |
-| Fonts | Playfair Display (display) + Poppins (UI) via Google Fonts |
+- **Public website** with the scroll-driven hero, gallery, contact details and a live
+  **available dates** calendar. Clients only ever see whether a date is free.
+- **Owner dashboard**: sign in, record who booked, from and to dates, final amount and money
+  received, close dates, and follow up website enquiries.
+- **Cloudflare Worker and D1 database** (`worker/`, `migrations/`). Bookings are whole days, and
+  the database refuses overlapping dates.
 
-## Getting started
+## Run it on your computer
+
+Needs Node.js 22.13 or newer.
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173  (hot reload)
+npm run owner:setup   # choose the owner username and password
+npm run dev
 ```
 
-Production:
+- Website: http://localhost:5173
+- Dashboard: http://admin.localhost:5173
+
+`npm test` runs the Worker tests. `npm run preview` builds the site and serves the production
+files on http://localhost:8787 and http://admin.localhost:8787.
+
+## Put it online for free
+
+You need a free [Cloudflare account](https://dash.cloudflare.com/sign-up).
 
 ```bash
-npm run build      # outputs to dist/
-npm run preview    # serve the production build locally
+npx wrangler login
+npx wrangler d1 create yash-palace
 ```
 
-> The site must be served over **HTTP** (Vite does this). The scroll-scrub video needs proper
-> byte-range requests, so opening files via `file://` will not seek correctly.
-
-## Deploy
-
-Static output — push to **Netlify / Vercel / Cloudflare Pages / GitHub Pages**.
-Build command `npm run build`, publish directory `dist`.
-
-## Project structure — one folder/file per concern
-
-```
-public/
-  assets/venue-tour.mp4        # scroll-scrub video
-  images/                      # poster + gallery frames (extracted from the video)
-
-src/
-  data/content.js              # ← ALL editable copy & lists (single source of truth)
-  lib/gsap.js                  # registers GSAP plugins
-  styles/index.css             # Tailwind layers + base styles
-
-  components/
-    ui/                        # reusable primitives
-      Button.jsx  Eyebrow.jsx  SectionTitle.jsx  Crest.jsx
-      Reveal.jsx               # IntersectionObserver fade-in (supports stagger)
-      Field.jsx                # floating-label form field
-      Lightbox.jsx
-    layout/
-      SmoothScroll.jsx         # Lenis + ScrollTrigger wiring (+ global anchor scroll)
-      Preloader.jsx  CursorGlow.jsx  Navbar.jsx  Footer.jsx
-    sections/                  # ← one file per page section
-      Hero.jsx        Marquee.jsx     StoryVideo.jsx   About.jsx
-      Stats.jsx       WhyUs.jsx       Gallery.jsx      Occasions.jsx
-      Testimonials.jsx Contact.jsx    MapSection.jsx
-
-  App.jsx                      # composes the sections
-  main.jsx                     # entry
-```
-
-## What to customise
-
-**Almost everything lives in [`src/data/content.js`](src/data/content.js)** — phone, email,
-address, map link, socials, feature cards, testimonials, occasions, stats, nav links and gallery
-captions. Edit there; no need to touch the components.
-
-| What | Where | Current placeholder |
-|------|-------|---------------------|
-| Phone / email / address | `content.js` → `venue` | `+91 00000 00000`, `hello@yashpalace.in` |
-| Social links | `content.js` → `venue.socials` | `#` |
-| Google Map pin | `content.js` → `venue.mapEmbed` | search-based; replace with the exact "Embed a map" URL from Google Maps |
-| Brand colours | `tailwind.config.js` → `theme.extend.colors` | venue palette |
-
-### Booking form
-The form (`src/components/sections/Contact.jsx`) is **front-end only** — it validates and shows a
-thank-you message but doesn't send anything yet. To receive enquiries, post to a no-backend
-service like [Formspree](https://formspree.io) or [Web3Forms](https://web3forms.com): add their
-endpoint in the `onSubmit` handler (or set the form `action`/`method`).
-
-### Photos
-The gallery currently uses frames extracted from the venue video. Drop your real photographs
-(mandap décor, hall interiors, food, evening shots) into `public/images/` and update the
-`galleryItems` list in `content.js`. Recommended: optimised JPG/WebP, ~1600px wide.
-
-<details>
-<summary>Re-extract poster/gallery frames from a new video</summary>
+Copy the `database_id` it prints into `wrangler.jsonc`, replacing the zeros. Then:
 
 ```bash
-V=public/assets/venue-tour.mp4
-ffmpeg -y -i "$V" -vf "select=eq(n\,0)" -vframes 1 public/images/poster.jpg
-ffmpeg -y -ss 4 -i "$V" -vframes 1 public/images/frame-02.jpg
-# ...adjust -ss timestamps as needed
+npm run deploy
+npm run owner:setup -- --remote
 ```
-Then update `venue.video` / image paths in `content.js` if filenames change.
-</details>
+
+The deploy prints your address, such as `https://yash-palace.<your-name>.workers.dev`.
+
+- Website: that address
+- Dashboard: that address followed by `/admin`
+
+### Connect yashpalace.com
+
+1. In Cloudflare, add `yashpalace.com` as a site on the Free plan.
+2. At your domain registrar, change the nameservers to the two Cloudflare gives you.
+3. When the domain shows as active, and has no existing DNS records for `yashpalace.com` or
+   `admin`, run:
+
+```bash
+npm run deploy:domain
+```
+
+The website is then at `https://yashpalace.com` and the dashboard at
+`https://admin.yashpalace.com`. Keep using `npm run deploy:domain` for later updates.
+
+## Looking after the data
+
+- `npm run backup` downloads the live database to `yash-palace-backup.sql`. Keep copies somewhere
+  safe. D1 can also restore the last 7 days on the free plan.
+- Forgotten password: run `npm run owner:setup -- --remote`. The owner can also change it under
+  Settings in the dashboard.
+- Free-plan limits are listed in Cloudflare's dashboard under Workers and D1. Photos, scripts and
+  styles do not count against the Worker's daily request limit.
+
+## Editing the website
+
+Phone, address, map, navigation, gallery and other text live in
+[`src/data/content.js`](src/data/content.js). To show an email address, fill in `venue.email`.
+
+The current photos in `public/images/venue/` come from the venue video. To replace one, keep its
+filename, or add a new file and update `galleryItems`. About 1600px wide is a good size.
+
+To replace the hero video, keep a short keyframe interval so scrolling stays smooth:
+
+```bash
+ffmpeg -i input.mp4 -an -c:v libx264 -preset slow -profile:v high -pix_fmt yuv420p \
+  -crf 27 -g 3 -keyint_min 3 -sc_threshold 0 -movflags +faststart public/assets/venue-tour.mp4
+```
 
 ## Notes
 - Respects `prefers-reduced-motion` (disables smooth scroll + heavy animation).

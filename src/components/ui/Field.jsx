@@ -1,12 +1,10 @@
 const inputBase =
-  'peer w-full border-0 border-b border-white/25 bg-transparent py-3 text-[0.98rem] font-light text-ivory transition-colors focus:border-gold-glow focus:outline-none';
+  'peer min-h-[50px] w-full border-0 border-b bg-transparent py-3 text-base text-ivory transition-colors focus:outline-none';
 
 const labelBase =
-  'pointer-events-none absolute left-0 top-3 text-[0.98rem] text-ivory/55 transition-all duration-300 ease-soft';
+  'pointer-events-none absolute left-0 top-3 text-base text-ivory/60 transition-all duration-300 ease-soft';
 
-// Floated (small, up, gold) state shared by focus / filled / static.
-const floated =
-  '-translate-y-6 text-[0.68rem] uppercase tracking-[0.12em] text-gold-glow';
+const floated = '-translate-y-6 text-xs font-medium text-gold-glow';
 
 export default function Field({
   id,
@@ -16,34 +14,49 @@ export default function Field({
   options,
   rows = 3,
   floatStatic = false,
+  error,
   ...props
 }) {
   const labelClass = floatStatic
     ? `${labelBase} ${floated}`
-    : `${labelBase} peer-focus:-translate-y-6 peer-focus:text-[0.68rem] peer-focus:uppercase peer-focus:tracking-[0.12em] peer-focus:text-gold-glow peer-[:not(:placeholder-shown)]:-translate-y-6 peer-[:not(:placeholder-shown)]:text-[0.68rem] peer-[:not(:placeholder-shown)]:uppercase peer-[:not(:placeholder-shown)]:tracking-[0.12em] peer-[:not(:placeholder-shown)]:text-gold-glow`;
+    : `${labelBase} peer-focus:-translate-y-6 peer-focus:text-xs peer-focus:font-medium peer-focus:text-gold-glow peer-[:not(:placeholder-shown)]:-translate-y-6 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:font-medium peer-[:not(:placeholder-shown)]:text-gold-glow`;
+  const border = error ? 'border-red-300' : 'border-white/25 focus:border-gold-glow';
+  const shared = {
+    id,
+    'aria-invalid': error ? true : undefined,
+    'aria-describedby': error ? `${id}-error` : undefined,
+    ...props,
+  };
 
   return (
-    <div className="relative">
-      {as === 'textarea' && (
-        <textarea id={id} rows={rows} placeholder=" " className={`${inputBase} resize-y`} {...props} />
-      )}
+    <div>
+      <div className="relative">
+        {as === 'textarea' && (
+          <textarea rows={rows} placeholder=" " className={`${inputBase} ${border} resize-y`} {...shared} />
+        )}
 
-      {as === 'select' && (
-        <select id={id} className={`${inputBase} [&>option]:text-ink`} defaultValue="" {...props}>
-          <option value="" disabled hidden />
-          {options.map((opt) => (
-            <option key={opt}>{opt}</option>
-          ))}
-        </select>
-      )}
+        {as === 'select' && (
+          <select className={`${inputBase} ${border} [&>option]:text-ink`} defaultValue="" {...shared}>
+            <option value="" disabled hidden />
+            {options.map((opt) => (
+              <option key={opt}>{opt}</option>
+            ))}
+          </select>
+        )}
 
-      {as === 'input' && (
-        <input id={id} type={type} placeholder=" " className={inputBase} {...props} />
-      )}
+        {as === 'input' && (
+          <input type={type} placeholder=" " className={`${inputBase} ${border}`} {...shared} />
+        )}
 
-      <label htmlFor={id} className={labelClass}>
-        {label}
-      </label>
+        <label htmlFor={id} className={labelClass}>
+          {label}
+        </label>
+      </div>
+      {error && (
+        <p id={`${id}-error`} className="mt-1.5 text-sm text-red-200">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

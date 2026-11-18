@@ -8,26 +8,40 @@ const icons = { Home, UtensilsCrossed, Flower2, Crown, CarFront, MapPin };
 
 export default function WhyUs() {
   return (
-    <section id="why" className="container-x section-pad">
-      <Reveal className="mb-12 max-w-2xl">
-        <Eyebrow className="mb-5">Why Yash Palace</Eyebrow>
-        <SectionTitle>Everything your celebration deserves</SectionTitle>
-      </Reveal>
+    <section id="why" className="container-x section-pad grid gap-12 lg:grid-cols-12 lg:gap-10">
+      <div className="lg:col-span-5">
+        <div className="lg:sticky lg:top-28">
+          <Reveal stagger={0.1}>
+            <Eyebrow className="mb-5">Why Yash Palace</Eyebrow>
+            <SectionTitle className="mb-8">Everything your celebration needs</SectionTitle>
+            <img
+              src="/images/venue/stage-sofas-portrait.jpg"
+              alt="Carved white stage sofas beside fresh rose columns"
+              loading="lazy"
+              className="arch hidden aspect-[5/6] w-full max-w-sm object-cover lg:block"
+            />
+          </Reveal>
+        </div>
+      </div>
 
-      <Reveal stagger={0.1} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <Reveal stagger={0.07} as="ul" className="lg:col-span-6 lg:col-start-7">
         {features.map((f) => {
           const Icon = icons[f.icon];
           return (
-            <article
+            <li
               key={f.title}
-              className="feature-card group rounded-[18px] border border-cream bg-white p-8 transition-all duration-500 ease-soft hover:-translate-y-2 hover:border-lime-soft hover:shadow-[0_28px_50px_-28px_rgba(63,82,38,0.5)]"
+              className="feature-card group grid grid-cols-[44px_1fr] gap-x-5 border-b border-cream py-7 first:pt-0"
             >
-              <div className="mb-5 grid h-14 w-14 place-items-center rounded-2xl border border-cream bg-gradient-to-br from-ivory-2 to-white text-green-800 transition-colors group-hover:text-gold">
-                {Icon && <Icon size={26} strokeWidth={1.5} />}
+              <span className="mt-1 text-gold transition-transform duration-300 ease-soft group-hover:-translate-y-0.5">
+                {Icon && <Icon size={30} strokeWidth={1.35} />}
+              </span>
+              <div>
+                <h3 className="mb-1.5 font-serif text-[1.85rem] font-semibold leading-tight text-green-800">
+                  {f.title}
+                </h3>
+                <p className="max-w-[52ch] text-ink-soft">{f.text}</p>
               </div>
-              <h3 className="mb-2 font-serif text-xl font-semibold text-green-800">{f.title}</h3>
-              <p className="text-[0.92rem] text-ink-soft">{f.text}</p>
-            </article>
+            </li>
           );
         })}
       </Reveal>

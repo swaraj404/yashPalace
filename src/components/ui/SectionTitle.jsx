@@ -1,7 +1,7 @@
 export default function SectionTitle({ children, light = false, className = '' }) {
   return (
     <h2
-      className={`font-serif text-[clamp(1.9rem,4.6vw,3.4rem)] font-medium leading-[1.08] tracking-tight ${
+      className={`font-serif text-[clamp(2.5rem,5.4vw,4.6rem)] font-medium leading-[0.98] tracking-[-0.015em] ${
         light ? 'text-ivory' : 'text-green-800'
       } ${className}`}
     >
